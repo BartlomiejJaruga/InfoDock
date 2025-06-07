@@ -2,19 +2,28 @@ import styles from "./MarketDashboard.module.scss";
 
 import { useEffect, useState } from "react";
 import axiosInstance from "@services/axiosInstance";
+import MarketForm from "@components/MarketForm/MarketForm";
+import LoadingIndicator from "@components/LoadingIndicator/LoadingIndicator";
 
 export default function MarketDashboard() {
+    const [loadingErrors, setLoadingErrors] = useState({
+        loadingCurrencyCodesError: null,
+    });
+
     const [currencyCodes, setCurrencyCodes] = useState([]);
     const [loadingCurrencyCodes, setLoadingCurrencyCodes] = useState(true);
-    const [formData, setFormData] = useState({
-        currency: "",
-        startDate: null,
-        endDate: null,
-    })
+    
     const [currencyData, setCurrencyData] = useState({});
     const [isCurrencyDataLoaded, setIsCurrencyDataLoaded] = useState(false);
 
     useEffect(() => {
+        getCurrencyCodes();
+    }, []);
+
+    const getCurrencyCodes = () => {
+        setLoadingCurrencyCodes(true);
+        setLoadingErrors((prev) => ({ ...prev, loadingCurrencyCodesError: null}));
+
         const cachedCurrencyCodes = sessionStorage.getItem("currencyCodes");
 
         if(cachedCurrencyCodes){
@@ -30,49 +39,38 @@ export default function MarketDashboard() {
             })
             .catch(err => {
                 console.error(err);
+                setLoadingErrors((prev) => ({ ...prev, loadingCurrencyCodesError: "failed to load currency codes from server"}));
                 setLoadingCurrencyCodes(false);
             });
         }
-    }, []);
-
-    const handleFormInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value}));
     }
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        
-        axiosInstance.get(`/currency/?code=${formData.currency}`).then(
-            response => {
-                setCurrencyData(response.data);
-                setIsCurrencyDataLoaded(true);
-            }
-        )
-        .catch(err => {
-            console.error(err);
-            setIsCurrencyDataLoaded(true);
-        });
-    }
+    
 
     return (
         <>
             <div className={styles.market_dashboard_container}>
                 <h1>Market Dashboard</h1>
-                {loadingCurrencyCodes ? (
-                    <p>Loading data...</p>
-                ) : (
-                    <form className={styles.currency_form} onSubmit={handleFormSubmit}>
-                        <select
-                            name="currency"
-                            value={formData.currency}
-                            onChange={handleFormInputChange}
-                        >
-                            {currencyCodes.map((code) => <option key={code} value={code}>{code}</option>)}
-                        </select>
-                        <button type="submit">Get Currency Rates</button>
-                    </form>
+
+                {loadingCurrencyCodes && (
+                    <LoadingIndicator message={"Loading data..."} fontSize={"1rem"}/>
                 )}
+
+                {!loadingCurrencyCodes && loadingErrors.loadingCurrencyCodesError === null && (
+                    <MarketForm 
+                        currencyCodes={currencyCodes} 
+                        setCurrencyData={setCurrencyData} 
+                        setIsCurrencyDataLoaded={setIsCurrencyDataLoaded}
+                    />
+                )}
+
+                {!loadingCurrencyCodes && loadingErrors.loadingCurrencyCodesError !== null && (
+                    <div className={styles.error_message_container}>
+                        <p>Error: {loadingErrors.loadingCurrencyCodesError}</p>
+                        <button onClick={getCurrencyCodes}>Retry</button>
+                    </div>
+                )}
+
                 {isCurrencyDataLoaded && 
                     <div className={styles.currency_result_info_container}>
                         <p>{currencyData.rates[0].mid}</p>

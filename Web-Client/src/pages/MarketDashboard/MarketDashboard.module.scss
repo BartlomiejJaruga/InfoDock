@@ -8,14 +8,6 @@
     background-color: $market-background-color;
 }
 
-.currency_form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2em;
-}
-
 .currency_result_info_container {
     display: flex;
     flex-direction: column;
@@ -23,4 +15,8 @@
     align-items: center;
     gap: 1rem;
     margin-top: 1rem;
+}
+
+.error_message_container {
+    color: $red;
 }
