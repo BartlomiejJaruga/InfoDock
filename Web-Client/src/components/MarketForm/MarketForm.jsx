@@ -5,7 +5,13 @@ import { useState, useId } from "react";
 import CustomCheckbox from "@components/CustomCheckbox/CustomCheckbox";
 
 
-export default function MarketForm({ currencyCodes, setCurrencyData, setIsCurrencyDataLoaded }) {
+export default function MarketForm({ 
+        currencyCodes, 
+        setCurrencyData, 
+        setLoadingCurrencyData, 
+        setLoadingErrors, 
+        setHasUserStartedLoadingCurrencyData 
+    }) {
     const baseUniqueId = useId();
     
     const [formData, setFormData] = useState({
@@ -61,6 +67,9 @@ export default function MarketForm({ currencyCodes, setCurrencyData, setIsCurren
         e.preventDefault();
         
         if(isFormCompleted()){
+            setLoadingCurrencyData(true);
+            setHasUserStartedLoadingCurrencyData(false);
+
             let endpointURL;
             if(formData.includeDateRange){
                 endpointURL = `/currency/range/?startDate=${formData.startDate}&endDate=${formData.endDate}&code=${formData.currency}`;
@@ -72,12 +81,19 @@ export default function MarketForm({ currencyCodes, setCurrencyData, setIsCurren
             axiosInstance.get(endpointURL).then(
                 response => {
                     setCurrencyData(response.data);
-                    setIsCurrencyDataLoaded(true);
+                    setLoadingErrors((prev) => ({ ...prev, loadingCurrencyDataError: null}));
+                    setLoadingCurrencyData(false);
+                    setHasUserStartedLoadingCurrencyData(true);
                 }
             )
             .catch(err => {
                 console.error(err);
-                setIsCurrencyDataLoaded(true);
+                setLoadingErrors((prev) => ({ 
+                    ...prev, 
+                    loadingCurrencyDataError: "failed to load data about selected currency, please try again later" 
+                }))
+                setLoadingCurrencyData(false);
+                setHasUserStartedLoadingCurrencyData(true);
             });
         }
     }

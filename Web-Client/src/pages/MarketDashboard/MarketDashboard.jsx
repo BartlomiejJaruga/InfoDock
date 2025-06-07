@@ -9,13 +9,16 @@ import MarketCurrencyChart from "@components/MarketCurrencyChart/MarketCurrencyC
 export default function MarketDashboard() {
     const [loadingErrors, setLoadingErrors] = useState({
         loadingCurrencyCodesError: null,
+        loadingCurrencyDataError: null,
     });
 
     const [currencyCodes, setCurrencyCodes] = useState([]);
     const [loadingCurrencyCodes, setLoadingCurrencyCodes] = useState(true);
     
     const [currencyData, setCurrencyData] = useState({});
-    const [isCurrencyDataLoaded, setIsCurrencyDataLoaded] = useState(false);
+    const [loadingCurrencyData, setLoadingCurrencyData] = useState(false);
+    const [hasUserStartedLoadingCurrencyData, setHasUserStartedLoadingCurrencyData] = useState(false);
+
 
     useEffect(() => {
         getCurrencyCodes();
@@ -23,7 +26,6 @@ export default function MarketDashboard() {
 
     const getCurrencyCodes = () => {
         setLoadingCurrencyCodes(true);
-        setLoadingErrors((prev) => ({ ...prev, loadingCurrencyCodesError: null}));
 
         const cachedCurrencyCodes = sessionStorage.getItem("currencyCodes");
 
@@ -36,6 +38,7 @@ export default function MarketDashboard() {
             .then(response => {
                 setCurrencyCodes(response.data);
                 sessionStorage.setItem("currencyCodes", JSON.stringify(response.data));
+                setLoadingErrors((prev) => ({ ...prev, loadingCurrencyCodesError: null}));
                 setLoadingCurrencyCodes(false);
             })
             .catch(err => {
@@ -68,7 +71,9 @@ export default function MarketDashboard() {
                     <MarketForm 
                         currencyCodes={currencyCodes} 
                         setCurrencyData={setCurrencyData} 
-                        setIsCurrencyDataLoaded={setIsCurrencyDataLoaded}
+                        setLoadingCurrencyData={setLoadingCurrencyData}
+                        setLoadingErrors={setLoadingErrors}
+                        setHasUserStartedLoadingCurrencyData = {setHasUserStartedLoadingCurrencyData}
                     />
                 )}
 
@@ -79,7 +84,11 @@ export default function MarketDashboard() {
                     </div>
                 )}
 
-                {isCurrencyDataLoaded && 
+                {loadingCurrencyData && (
+                    <LoadingIndicator message={"Loading currency data..."} fontSize={"1rem"} />
+                )}
+
+                {hasUserStartedLoadingCurrencyData && !loadingCurrencyData && loadingErrors.loadingCurrencyDataError === null && (
                     <div className={styles.currency_result_info_container}>
                         {(currencyData.rates.length === 1) ? (
                             <div className={styles.single_currency_result_info_container}>
@@ -95,7 +104,13 @@ export default function MarketDashboard() {
                             />
                         )}
                     </div>
-                }
+                )}
+
+                {hasUserStartedLoadingCurrencyData && !loadingCurrencyData && loadingErrors.loadingCurrencyDataError !== null && (
+                    <div className={styles.error_message_container}>
+                        <p>Error: {loadingErrors.loadingCurrencyDataError}</p>
+                    </div>
+                )}
             </div>
         </>
     )
