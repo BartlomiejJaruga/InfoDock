@@ -10,11 +10,13 @@ export default function MarketForm({
         setCurrencyData, 
         setLoadingCurrencyData, 
         setLoadingErrors, 
-        setHasUserStartedLoadingCurrencyData 
+        setHasUserStartedLoadingCurrencyData,
+        setCurrencyDataType
     }) {
     const baseUniqueId = useId();
     
     const [formData, setFormData] = useState({
+        dataType: "currency", // "currency" | "gold"
         currency: "",
         includeDateRange: false,
         startDate: "",
@@ -36,7 +38,7 @@ export default function MarketForm({
     const isFormCompleted = () => {
         let isFormFullyCompleted = true;
 
-        if(formData.currency === "" || formData.currency === null){
+        if(formData.dataType === "currency" && (formData.currency === "" || formData.currency === null)){
             setFormErrors((prev) => ({ ...prev, currencyNotSelected: true}));
             isFormFullyCompleted = false;
         }
@@ -71,16 +73,31 @@ export default function MarketForm({
             setHasUserStartedLoadingCurrencyData(false);
 
             let endpointURL;
-            if(formData.includeDateRange){
-                endpointURL = `/currency/range/?startDate=${formData.startDate}&endDate=${formData.endDate}&code=${formData.currency}`;
+            if(formData.dataType === "currency"){
+                if(formData.includeDateRange){
+                    endpointURL = `/currency/range/?startDate=${formData.startDate}&endDate=${formData.endDate}&code=${formData.currency}`;
+                }
+                else{
+                    endpointURL = `/currency/?code=${formData.currency}`;
+                }
+            }
+            else if(formData.dataType === "gold"){
+                if(formData.includeDateRange){
+                    endpointURL = `/currency/gold/range/?startDate=${formData.startDate}&endDate=${formData.endDate}`;
+                }
+                else{
+                    endpointURL = `/currency/gold/`;
+                }
             }
             else{
-                endpointURL = `/currency/?code=${formData.currency}`;
+                console.error("Unknown dataType passed from MarketForm (should be gold or currency)");
+                //TODO EXIT
             }
 
             axiosInstance.get(endpointURL).then(
                 response => {
                     setCurrencyData(response.data);
+                    setCurrencyDataType(formData.dataType);
                     setLoadingErrors((prev) => ({ ...prev, loadingCurrencyDataError: null}));
                     setLoadingCurrencyData(false);
                     setHasUserStartedLoadingCurrencyData(true);
@@ -98,25 +115,52 @@ export default function MarketForm({
         }
     }
 
+
     return (
         <form className={styles.currency_form} onSubmit={handleFormSubmit}>
-            <div>
-                <select
-                    name="currency"
-                    value={formData.currency}
-                    onChange={handleFormInputChange}
-                >   
-                    <option value="" disabled>Select currency</option>
-                    {currencyCodes.map((code) => <option key={code} value={code}>{code}</option>)}
-                </select>
-                {formErrors.currencyNotSelected && (
-                    <div className={styles.form_error_container}>
-                        <p>Currency needs to be selected</p>
-                    </div>
-                )}
+            <div className={styles.currency_radio_input_type_container}>
+                <div className={styles.currency_single_radio_input_type_container}>
+                    <input
+                        type="radio"
+                        name="dataType"
+                        id={`${baseUniqueId}-currency`}
+                        value="currency"
+                        checked={formData.dataType === "currency"}
+                        onChange={handleFormInputChange}
+                    />
+                    <label htmlFor={`${baseUniqueId}-currency`}>Currency</label>
+                </div>
+                <div className={styles.currency_single_radio_input_type_container}>
+                    <input
+                        type="radio"
+                        name="dataType"
+                        id={`${baseUniqueId}-gold`}
+                        value="gold"
+                        checked={formData.dataType === "gold"}
+                        onChange={handleFormInputChange}
+                    />
+                    <label htmlFor={`${baseUniqueId}-gold`}>Gold</label>
+                </div>
             </div>
-            
 
+            {formData.dataType === "currency" && (
+                <div>
+                    <select
+                        name="currency"
+                        value={formData.currency}
+                        onChange={handleFormInputChange}
+                    >   
+                        <option value="" disabled>Select currency</option>
+                        {currencyCodes.map((code) => <option key={code} value={code}>{code}</option>)}
+                    </select>
+                    {formErrors.currencyNotSelected && (
+                        <div className={styles.form_error_container}>
+                            <p>Currency needs to be selected</p>
+                        </div>
+                    )}
+                </div>
+            )}
+            
             <CustomCheckbox 
                 inputName={"includeDateRange" } 
                 labelText={"include date range?"} 
@@ -159,7 +203,9 @@ export default function MarketForm({
                 </div>
             )}
 
-            <button type="submit">Get Currency Rates</button>
+            <button type="submit">
+                {formData.dataType === "currency" ? "Get Currency Rates" : "Get Gold Price"}
+            </button>
         </form>
     );
 }

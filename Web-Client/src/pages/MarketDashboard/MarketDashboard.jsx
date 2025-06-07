@@ -18,7 +18,7 @@ export default function MarketDashboard() {
     const [currencyData, setCurrencyData] = useState({});
     const [loadingCurrencyData, setLoadingCurrencyData] = useState(false);
     const [hasUserStartedLoadingCurrencyData, setHasUserStartedLoadingCurrencyData] = useState(false);
-
+    const [currencyDataType, setCurrencyDataType] = useState("currency"); // "currency" | "gold"
 
     useEffect(() => {
         getCurrencyCodes();
@@ -54,7 +54,15 @@ export default function MarketDashboard() {
             accumulator.push({ date: rate.effectiveDate, rate: rate.mid});
 
             return accumulator;
-        }, [])
+        }, []);
+    }
+
+    const reduceGoldData = (data) => {
+        return data.reduce((accumulator, dayData) => {
+            accumulator.push({ date: dayData.data, price: dayData.cena});
+
+            return accumulator;
+        }, []);
     }
     
 
@@ -74,6 +82,7 @@ export default function MarketDashboard() {
                         setLoadingCurrencyData={setLoadingCurrencyData}
                         setLoadingErrors={setLoadingErrors}
                         setHasUserStartedLoadingCurrencyData = {setHasUserStartedLoadingCurrencyData}
+                        setCurrencyDataType = {setCurrencyDataType}
                     />
                 )}
 
@@ -90,17 +99,35 @@ export default function MarketDashboard() {
 
                 {hasUserStartedLoadingCurrencyData && !loadingCurrencyData && loadingErrors.loadingCurrencyDataError === null && (
                     <div className={styles.currency_result_info_container}>
-                        {(currencyData.rates.length === 1) ? (
+                        {currencyDataType === "currency" && currencyData.rates.length === 1 && (
                             <div className={styles.single_currency_result_info_container}>
                                 <p>date: {currencyData.rates[0].effectiveDate}</p>
                                 <p>rate: {currencyData.rates[0].mid}</p>
                             </div>
-                        ) : (
+                        )}
+
+                        {currencyDataType === "currency" && currencyData.rates.length > 1 && (
                             <MarketCurrencyChart 
                                 data={reduceCurrencyData(currencyData.rates)} 
                                 xAxisDataKey={"date"} 
                                 yAxisDataKey={"rate"} 
                                 lineColor="#00B4D8"    
+                            />
+                        )}
+
+                        {currencyDataType === "gold" && currencyData.length === 1 && (
+                            <div className={styles.single_currency_result_info_container}>
+                                <p>date: {currencyData[0].data}</p>
+                                <p>price: {currencyData[0].cena}</p>
+                            </div>
+                        )}
+
+                        {currencyDataType === "gold" && currencyData.length > 1 && (
+                            <MarketCurrencyChart 
+                                data={reduceGoldData(currencyData)} 
+                                xAxisDataKey={"date"} 
+                                yAxisDataKey={"price"} 
+                                lineColor="#FFD700"
                             />
                         )}
                     </div>

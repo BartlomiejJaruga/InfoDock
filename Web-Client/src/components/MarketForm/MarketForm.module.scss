@@ -4,8 +4,27 @@
     justify-content: center;
     align-items: center;
     gap: 2em;
+    margin-top: 2rem;
 }
 
 .form_error_container {
     color: $red;
+}
+
+.currency_radio_input_type_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.currency_single_radio_input_type_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.currency_single_radio_input_type_container input[type='radio'] {
+    margin-right: 0.5em;
 }
