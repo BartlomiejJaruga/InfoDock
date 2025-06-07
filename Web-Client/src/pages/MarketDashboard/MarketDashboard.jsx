@@ -127,7 +127,7 @@ export default function MarketDashboard() {
                                     <h3>Currency Mean Rate (selected range):</h3>
                                     <div className={styles.currency_result_info_mean_rate_grid_container}>
                                         <div>{currencyData.code}</div>
-                                        <div>---</div>
+                                        <div>{`<--->`}</div>
                                         <div>PLN</div>
                                         <div>1</div>
                                         <div>{countRatesMean(currencyData.rates)}</div>
@@ -149,7 +149,7 @@ export default function MarketDashboard() {
                                         <h3>Currency Mean Rate (selected range):</h3>
                                         <div className={styles.currency_result_info_mean_rate_grid_container}>
                                             <div>{currencyData.code}</div>
-                                            <div>---</div>
+                                            <div>{`<--->`}</div>
                                             <div>PLN</div>
                                             <div>1</div>
                                             <div>{countRatesMean(currencyData.rates)}</div>
