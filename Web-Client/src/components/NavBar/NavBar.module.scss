@@ -1,0 +1,34 @@
+.navbar_container {
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: $dark-blue;
+}
+
+.market_and_weather_links_container {
+    margin-right: 2rem;
+}
+
+.navbar_container a,
+.market_and_weather_links_container a {
+    color: $Text-White-Texts;
+    height: 100%;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar_container a img {
+    max-width: 5rem;
+    height: auto;
+}
+
+.market_and_weather_links_container {
+    display: flex;
+    gap: 4em;
+}
