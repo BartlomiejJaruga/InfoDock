@@ -1,3 +1,7 @@
+// ========= BECAUSE OF MY LACK OF TIME THE SCSS IS QUITE BAD
+// ========= IF I HAD MORE TIME I WOULD MAKE IT A LOT CLEANER AND BETTER GROUPED
+// ========= SOME CLASSES DUPLICATE CODE AND I KNOW IT
+
 .market_dashboard_container {
     width: 100%;
     flex-grow: 1;
@@ -8,13 +12,26 @@
     background-color: $market-background-color;
 }
 
+.market_dashboard_header {
+    margin-top: 2rem;
+}
+
+
+.error_message_container {
+    color: $red;
+}
+
+
+
 .currency_result_info_container {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    margin-top: 1rem;
+    margin: 10vh 0;
 }
+
+// currency
 
 .single_currency_result_info_container {
     display: flex;
@@ -22,11 +39,152 @@
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem;
-    background-color: $market-currency-color;
+    padding: 0.5rem 1rem;
+    background-color: $dark-white;
+    box-shadow: 0 0 0.2em $gray;
     border-radius: 0.5em;
 }
 
-.error_message_container {
-    color: $red;
+.single_currency_result_info_container h3 {
+    color: $market-currency-color;
+    font-size: 1.2rem;
+    @include apply-font($font-general);
+    font-weight: 400;
+}
+
+.single_currency_result_info_container p {
+    @include apply-font($font-headings);
+    margin-right: auto;
+}
+
+
+.currency_result_info_details_container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 80vw;
+}
+
+.currency_result_info_mean_rate_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: $dark-white;
+    border-radius: 0.5rem;
+    padding: 0.5em;
+    gap: 1em;
+    box-shadow: 0 0 0.2em $gray;
+}
+
+.currency_result_info_mean_rate_container {
+    @include apply-font($font-headings);
+}
+
+.currency_result_info_mean_rate_container h3 {
+    color: $market-currency-color;
+    font-size: 1.2rem;
+    @include apply-font($font-general);
+    font-weight: 400;
+}
+
+.currency_result_info_mean_rate_grid_container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    row-gap: 0.2rem;
+    column-gap: 1rem;
+}
+
+.currency_result_info_mean_rate_grid_container div:nth-of-type(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-row: span 2;
+}
+
+.currency_result_info_wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+
+
+// gold
+
+.gold_result_info_details_container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 80vw;
+}
+
+.gold_result_info_mean_rate_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: $dark-white;
+    border-radius: 0.5rem;
+    padding: 0.5em;
+    gap: 1em;
+    box-shadow: 0 0 0.2em $gray;
+}
+
+.gold_result_info_mean_rate_container {
+    @include apply-font($font-headings);
+}
+
+.gold_result_info_mean_rate_container h3 {
+    color: $market-currency-dark-gold-color;
+    font-size: 1.2rem;
+    @include apply-font($font-general);
+    font-weight: 400;
+}
+
+.gold_result_info_mean_rate_grid_container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    row-gap: 0.2rem;
+    column-gap: 1rem;
+}
+
+.gold_result_info_mean_rate_grid_container div:nth-of-type(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-row: span 2;
+}
+
+.gold_result_info_wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.single_gold_result_info_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: $dark-white;
+    box-shadow: 0 0 0.2em $gray;
+    border-radius: 0.5em;
+}
+
+.single_gold_result_info_container h3 {
+    color: $market-currency-dark-gold-color;
+    font-size: 1.2rem;
+    @include apply-font($font-general);
+    font-weight: 400;
+}
+
+.single_gold_result_info_container p {
+    @include apply-font($font-headings);
+    margin-right: auto;
 }

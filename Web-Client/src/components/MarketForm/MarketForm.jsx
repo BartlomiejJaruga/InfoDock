@@ -27,6 +27,9 @@ export default function MarketForm({
         currencyNotSelected: false,
         startDateNotSelected: false,
         endDateNotSelected: false,
+        startDateIsSetToFuture: false,
+        endDateIsSetToFuture: false,
+        startDateIsAfterEndDate: false,
     });
 
 
@@ -34,6 +37,8 @@ export default function MarketForm({
         const { name, value, type, checked } = e.target;
         setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value}));
     }
+
+
 
     const isFormCompleted = () => {
         let isFormFullyCompleted = true;
@@ -65,10 +70,49 @@ export default function MarketForm({
         return isFormFullyCompleted;
     }
 
+
+
+    const isFormValid = () => {
+        let isFormFullyValid = true;
+        const today = new Date().toISOString().split("T")[0]; // format YYYY-MM-DD
+
+        if(formData.includeDateRange && formData.startDate !== "" && formData.startDate > today){
+            setFormErrors((prev) => ({ ...prev, startDateIsSetToFuture: true }));
+            isFormFullyValid = false;
+        }
+        else{
+            setFormErrors((prev) => ({ ...prev, startDateIsSetToFuture: false }));
+        }
+
+        if(formData.includeDateRange && formData.endDate !== "" && formData.endDate > today){
+            setFormErrors((prev) => ({ ...prev, endDateIsSetToFuture: true }));
+            isFormFullyValid = false;
+        }
+        else{
+            setFormErrors((prev) => ({ ...prev, endDateIsSetToFuture: false }));
+        }
+
+        if(formData.includeDateRange 
+            && formData.endDate !== ""
+            && formData.startDate !== "" 
+            && formData.startDate > formData.endDate
+        ){
+            setFormErrors((prev) => ({ ...prev, startDateIsAfterEndDate: true }));
+            isFormFullyValid = false;
+        }
+        else{
+            setFormErrors((prev) => ({ ...prev, startDateIsAfterEndDate: false }));
+        }
+
+        return isFormFullyValid;
+    }
+
+
+
     const handleFormSubmit = (e) => {
         e.preventDefault();
         
-        if(isFormCompleted()){
+        if(isFormCompleted() && isFormValid()){
             setLoadingCurrencyData(true);
             setHasUserStartedLoadingCurrencyData(false);
 
@@ -116,6 +160,7 @@ export default function MarketForm({
     }
 
 
+
     return (
         <form className={styles.currency_form} onSubmit={handleFormSubmit}>
             <div className={styles.currency_radio_input_type_container}>
@@ -144,9 +189,11 @@ export default function MarketForm({
             </div>
 
             {formData.dataType === "currency" && (
-                <div>
+                <div className={styles.currency_selector_container}>
+                    <label htmlFor={`${baseUniqueId}-currency-selector`}>Currency:</label>
                     <select
                         name="currency"
+                        id={`${baseUniqueId}-currency-selector`}
                         value={formData.currency}
                         onChange={handleFormInputChange}
                     >   
@@ -164,46 +211,65 @@ export default function MarketForm({
             <CustomCheckbox 
                 inputName={"includeDateRange" } 
                 labelText={"include date range?"} 
-                fontSize={"1rem"}
+                fontSize={"1.2rem"}
                 onClickAction={handleFormInputChange}
             />
             {formData.includeDateRange && (
                 <div className={styles.date_inputs_container}>
-                    <div className={styles.single_date_input_container}>
-                        <label htmlFor={`${baseUniqueId}-startDate`}>Start Date:</label>
-                        <input
-                            type="date"
-                            name="startDate"
-                            id={`${baseUniqueId}-startDate`}
-                            value={formData.startDate}
-                            onChange={handleFormInputChange}
-                        />
-                    </div>
-                    {formErrors.startDateNotSelected && (
-                        <div className={styles.form_error_container}>
-                            <p>Start Date needs to be selected</p>
+                    <div className={styles.single_date_input_and_errors_container}>
+                        <div className={styles.single_date_input_container}>
+                            <label htmlFor={`${baseUniqueId}-startDate`}>Start Date:</label>
+                            <input
+                                type="date"
+                                name="startDate"
+                                id={`${baseUniqueId}-startDate`}
+                                value={formData.startDate}
+                                onChange={handleFormInputChange}
+                            />
                         </div>
-                    )}
+                        {formErrors.startDateNotSelected && (
+                            <div className={styles.form_error_container}>
+                                <p>Start Date needs to be selected</p>
+                            </div>
+                        )}
+                        {formErrors.startDateIsSetToFuture && (
+                            <div className={styles.form_error_container}>
+                                <p>Start Date can't be future date</p>
+                            </div>
+                        )}
+                        {formErrors.startDateIsAfterEndDate && (
+                            <div className={styles.form_error_container}>
+                                <p>Start Date can't be after End Date</p>
+                            </div>
+                        )}
+                    </div>
                     
-                    <div className={styles.single_date_input_container}>
-                        <label htmlFor={`${baseUniqueId}-endDate`}>End Date:</label>
-                        <input
-                            type="date"
-                            name="endDate"
-                            id={`${baseUniqueId}-endDate`}
-                            value={formData.endDate}
-                            onChange={handleFormInputChange}
-                        />
-                    </div>
-                    {formErrors.endDateNotSelected && (
-                        <div className={styles.form_error_container}>
-                            <p>End Date needs to be selected</p>
+                    <div className={styles.single_date_input_and_errors_container}>
+                        <div className={styles.single_date_input_container}>
+                            <label htmlFor={`${baseUniqueId}-endDate`}>End Date:</label>
+                            <input
+                                type="date"
+                                name="endDate"
+                                id={`${baseUniqueId}-endDate`}
+                                value={formData.endDate}
+                                onChange={handleFormInputChange}
+                            />
                         </div>
-                    )}
+                        {formErrors.endDateNotSelected && (
+                            <div className={styles.form_error_container}>
+                                <p>End Date needs to be selected</p>
+                            </div>
+                        )}
+                        {formErrors.endDateIsSetToFuture && (
+                            <div className={styles.form_error_container}>
+                                <p>End Date can't be future date</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
 
-            <button type="submit">
+            <button type="submit" className={styles.submit_button}>
                 {formData.dataType === "currency" ? "Get Currency Rates" : "Get Gold Price"}
             </button>
         </form>

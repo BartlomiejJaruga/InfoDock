@@ -28,6 +28,7 @@ $font-general: (
 // ---- MAIN COLORS PALLETE ----
 
 $dark-blue: #0D1B2A;
+$dark-blue-hover: color.adjust($dark-blue, $lightness: 15%);
 $gray: #666666;
 $light-gray: #CFCFCF;
 $black: #000000;
@@ -43,6 +44,7 @@ $red: #C81E18;
 $market-background-color: #CFCFCF;
 $market-currency-color: #00B4D8;
 $market-currency-gold-color: #FFD700;
+$market-currency-dark-gold-color: #cbb11f;
 
 // ---- WEATHER DASHBOARD PAGE COLORS PALLETE ----
 

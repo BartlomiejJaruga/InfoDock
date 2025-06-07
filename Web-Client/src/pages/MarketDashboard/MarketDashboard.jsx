@@ -36,7 +36,7 @@ export default function MarketDashboard() {
         else{
             axiosInstance.get("/currency/codes/")
             .then(response => {
-                setCurrencyCodes(response.data);
+                setCurrencyCodes(response.data.sort());
                 sessionStorage.setItem("currencyCodes", JSON.stringify(response.data));
                 setLoadingErrors((prev) => ({ ...prev, loadingCurrencyCodesError: null}));
                 setLoadingCurrencyCodes(false);
@@ -64,12 +64,33 @@ export default function MarketDashboard() {
             return accumulator;
         }, []);
     }
+
+    const countRatesMean = (rates) => {
+        const ratesSum = rates.reduce((accumulator, rate) => {
+            accumulator += rate.mid;
+
+            return accumulator;
+        }, 0);
+
+        return ratesSum/rates.length;
+    }
+
+    const countGoldPriceMean = (data) => {
+        const priceSum = data.reduce((accumulator, dayData) => {
+            accumulator += dayData.cena;
+
+            return accumulator;
+        }, 0);
+
+        return priceSum/data.length;
+    }
+
     
 
     return (
         <>
             <div className={styles.market_dashboard_container}>
-                <h1>Market Dashboard</h1>
+                <h1 className={styles.market_dashboard_header}>Market Dashboard</h1>
 
                 {loadingCurrencyCodes && (
                     <LoadingIndicator message={"Loading data..."} fontSize={"1rem"}/>
@@ -99,36 +120,105 @@ export default function MarketDashboard() {
 
                 {hasUserStartedLoadingCurrencyData && !loadingCurrencyData && loadingErrors.loadingCurrencyDataError === null && (
                     <div className={styles.currency_result_info_container}>
+                        {console.log(currencyData)}
                         {currencyDataType === "currency" && currencyData.rates.length === 1 && (
-                            <div className={styles.single_currency_result_info_container}>
-                                <p>date: {currencyData.rates[0].effectiveDate}</p>
-                                <p>rate: {currencyData.rates[0].mid}</p>
+                            <div className={styles.currency_result_info_details_container}>
+                                <div className={styles.currency_result_info_mean_rate_container}>
+                                    <h3>Currency Mean Rate (selected range):</h3>
+                                    <div className={styles.currency_result_info_mean_rate_grid_container}>
+                                        <div>{currencyData.code}</div>
+                                        <div>---</div>
+                                        <div>PLN</div>
+                                        <div>1</div>
+                                        <div>{countRatesMean(currencyData.rates)}</div>
+                                    </div>
+                                </div>
+                                
+                                <div className={styles.single_currency_result_info_container}>
+                                    <h3>{currencyData.code}</h3>
+                                    <p>date: {currencyData.rates[currencyData.rates.length-1].effectiveDate}</p>
+                                    <p>rate: {currencyData.rates[currencyData.rates.length-1].mid}</p>
+                                </div>
                             </div>
                         )}
 
                         {currencyDataType === "currency" && currencyData.rates.length > 1 && (
-                            <MarketCurrencyChart 
-                                data={reduceCurrencyData(currencyData.rates)} 
-                                xAxisDataKey={"date"} 
-                                yAxisDataKey={"rate"} 
-                                lineColor="#00B4D8"    
-                            />
-                        )}
-
-                        {currencyDataType === "gold" && currencyData.length === 1 && (
-                            <div className={styles.single_currency_result_info_container}>
-                                <p>date: {currencyData[0].data}</p>
-                                <p>price: {currencyData[0].cena}</p>
+                            <div className={styles.currency_result_info_wrapper}>
+                                <div className={styles.currency_result_info_details_container}>
+                                    <div className={styles.currency_result_info_mean_rate_container}>
+                                        <h3>Currency Mean Rate (selected range):</h3>
+                                        <div className={styles.currency_result_info_mean_rate_grid_container}>
+                                            <div>{currencyData.code}</div>
+                                            <div>---</div>
+                                            <div>PLN</div>
+                                            <div>1</div>
+                                            <div>{countRatesMean(currencyData.rates)}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className={styles.single_currency_result_info_container}>
+                                        <h3>{currencyData.code}</h3>
+                                        <p>date: {currencyData.rates[currencyData.rates.length-1].effectiveDate}</p>
+                                        <p>rate: {currencyData.rates[currencyData.rates.length-1].mid}</p>
+                                    </div>
+                                </div>
+                                <MarketCurrencyChart 
+                                    data={reduceCurrencyData(currencyData.rates)} 
+                                    xAxisDataKey={"date"} 
+                                    yAxisDataKey={"rate"} 
+                                    lineColor="#00B4D8"    
+                                />
                             </div>
                         )}
 
+                        {currencyDataType === "gold" && currencyData.length === 1 && (
+                            <div className={styles.gold_result_info_details_container}>
+                                <div className={styles.gold_result_info_mean_rate_container}>
+                                    <h3>Gold Mean Rate (selected range):</h3>
+                                    <div className={styles.gold_result_info_mean_rate_grid_container}>
+                                        <div>{`Gold (gram)`}</div>
+                                        <div>{`<--->`}</div>
+                                        <div>PLN</div>
+                                        <div>1</div>
+                                        <div>{countGoldPriceMean(currencyData)}</div>
+                                    </div>
+                                </div>
+                                
+                                <div className={styles.single_gold_result_info_container}>
+                                    <h3>GOLD</h3>
+                                    <p>date: {currencyData[currencyData.length-1].data}</p>
+                                    <p>price: {currencyData[currencyData.length-1].cena}</p>
+                                </div>
+                            </div>  
+                        )}
+
                         {currencyDataType === "gold" && currencyData.length > 1 && (
-                            <MarketCurrencyChart 
-                                data={reduceGoldData(currencyData)} 
-                                xAxisDataKey={"date"} 
-                                yAxisDataKey={"price"} 
-                                lineColor="#FFD700"
-                            />
+                            <div className={styles.gold_result_info_wrapper}>
+                                <div className={styles.gold_result_info_details_container}>
+                                    <div className={styles.gold_result_info_mean_rate_container}>
+                                        <h3>Gold Mean Rate (selected range):</h3>
+                                        <div className={styles.gold_result_info_mean_rate_grid_container}>
+                                            <div>{`Gold (gram)`}</div>
+                                            <div>{`<--->`}</div>
+                                            <div>PLN</div>
+                                            <div>1</div>
+                                            <div>{countGoldPriceMean(currencyData)}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className={styles.single_gold_result_info_container}>
+                                        <h3>GOLD</h3>
+                                        <p>date: {currencyData[currencyData.length-1].data}</p>
+                                        <p>price: {currencyData[currencyData.length-1].cena}</p>
+                                    </div>
+                                </div>
+                                <MarketCurrencyChart 
+                                    data={reduceGoldData(currencyData)} 
+                                    xAxisDataKey={"date"} 
+                                    yAxisDataKey={"price"} 
+                                    lineColor="#FFD700"
+                                />
+                            </div>
                         )}
                     </div>
                 )}

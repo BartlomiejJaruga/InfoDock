@@ -3,8 +3,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: $dark-white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 0.3em $gray;
     gap: 2em;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 .form_error_container {
@@ -22,9 +26,84 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 .currency_single_radio_input_type_container input[type='radio'] {
     margin-right: 0.5em;
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.currency_single_radio_input_type_container input[type='radio']:focus {
+    box-shadow: 0 0 0.6em $dark-blue;
+}
+
+.currency_selector_container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+}
+
+.currency_selector_container select {
+    font-size: 1.2rem;
+    @include apply-font($font-general);
+    font-weight: 300;
+    border: 0.15em $dark-blue solid;
+}
+
+.currency_selector_container select:focus {
+    box-shadow: 0 0 0.6em $dark-blue;
+    outline: none;
+}
+
+.currency_selector_container label {
+    font-size: 1.2rem;
+}
+
+.date_inputs_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.single_date_input_and_errors_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.single_date_input_container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+}
+
+.single_date_input_container label {
+    font-size: 1.2rem;
+}
+
+.single_date_input_container input[type='date'] {
+    font-size: 1.5rem;
+    border: 0.1em $dark-blue solid;
+    padding: 0.3em 0.5em;
+}
+
+.submit_button {
+    font-size: 1.7rem;
+    border: none;
+    border-radius: 0.3em;
+    background-color: $dark-blue;
+    color: $Text-White-Texts;
+    padding: 0.3em 0.5em;
+    box-shadow: 0 0.15em 0.1em 0.05em $gray;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.submit_button:hover {
+    background-color: $dark-blue-hover;
 }
