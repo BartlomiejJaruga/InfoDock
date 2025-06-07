@@ -10,11 +10,21 @@
 
 .currency_result_info_container {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
     margin-top: 1rem;
+}
+
+.single_currency_result_info_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: $market-currency-color;
+    border-radius: 0.5em;
 }
 
 .error_message_container {

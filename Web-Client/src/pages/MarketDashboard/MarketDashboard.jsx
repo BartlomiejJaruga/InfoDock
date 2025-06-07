@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@services/axiosInstance";
 import MarketForm from "@components/MarketForm/MarketForm";
 import LoadingIndicator from "@components/LoadingIndicator/LoadingIndicator";
+import MarketCurrencyChart from "@components/MarketCurrencyChart/MarketCurrencyChart";
 
 export default function MarketDashboard() {
     const [loadingErrors, setLoadingErrors] = useState({
@@ -45,6 +46,13 @@ export default function MarketDashboard() {
         }
     }
 
+    const reduceCurrencyData = (rates) => {
+        return rates.reduce((accumulator, rate) => {
+            accumulator.push({ date: rate.effectiveDate, rate: rate.mid});
+
+            return accumulator;
+        }, [])
+    }
     
 
     return (
@@ -73,8 +81,19 @@ export default function MarketDashboard() {
 
                 {isCurrencyDataLoaded && 
                     <div className={styles.currency_result_info_container}>
-                        <p>{currencyData.rates[0].mid}</p>
-                        <p>{currencyData.rates[0].effectiveDate}</p>
+                        {(currencyData.rates.length === 1) ? (
+                            <div className={styles.single_currency_result_info_container}>
+                                <p>date: {currencyData.rates[0].effectiveDate}</p>
+                                <p>rate: {currencyData.rates[0].mid}</p>
+                            </div>
+                        ) : (
+                            <MarketCurrencyChart 
+                                data={reduceCurrencyData(currencyData.rates)} 
+                                xAxisDataKey={"date"} 
+                                yAxisDataKey={"rate"} 
+                                lineColor="#00B4D8"    
+                            />
+                        )}
                     </div>
                 }
             </div>
