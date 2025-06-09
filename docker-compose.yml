@@ -1,0 +1,30 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-container
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+
+  server:
+    build: ./Server
+    container_name: server
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./Server:/app
+    env_file:
+      - .env
+
+  client:
+    build: ./Web-Client
+    container_name: client
+    ports:
+      - "7666:80"
+    depends_on:
+      - server
