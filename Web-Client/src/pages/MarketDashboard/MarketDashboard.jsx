@@ -5,6 +5,7 @@ import axiosInstance from "@services/axiosInstance";
 import MarketForm from "@components/MarketForm/MarketForm";
 import LoadingIndicator from "@components/LoadingIndicator/LoadingIndicator";
 import MarketCurrencyChart from "@components/MarketCurrencyChart/MarketCurrencyChart";
+import SaveCurrencyDataButton from "@components/SaveCurrencyDataButton/SaveCurrencyDataButton";
 
 export default function MarketDashboard() {
     const [loadingErrors, setLoadingErrors] = useState({
@@ -83,6 +84,13 @@ export default function MarketDashboard() {
         }, 0);
 
         return priceSum/data.length;
+    }
+
+    const createCurrencyDataToSaveToDatabase = (data) => {
+        return {
+            code: data.code,
+            rates: reduceCurrencyData(data.rates),
+        }
     }
 
     
@@ -168,6 +176,9 @@ export default function MarketDashboard() {
                                     yAxisDataKey={"rate"} 
                                     lineColor="#00B4D8"    
                                 />
+                                {console.log(currencyData)}
+                                {console.log(createCurrencyDataToSaveToDatabase(currencyData))}
+                                <SaveCurrencyDataButton data={createCurrencyDataToSaveToDatabase(currencyData)}/>
                             </div>
                         )}
 

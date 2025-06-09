@@ -10,12 +10,12 @@
     z-index: 1000;
 }
 
-.market_and_weather_links_container {
+.market_and_market_history_links_container {
     margin: 0 auto;
 }
 
 .navbar_container a,
-.market_and_weather_links_container a {
+.market_and_market_history_links_container a {
     color: $Text-White-Texts;
     height: 100%;
     width: auto;
@@ -29,7 +29,7 @@
     height: auto;
 }
 
-.market_and_weather_links_container {
+.market_and_market_history_links_container {
     display: flex;
     gap: 4em;
 }
