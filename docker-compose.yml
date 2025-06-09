@@ -8,6 +8,9 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: infodock
+    networks:
+      - backendnet
 
   server:
     build: ./Server
@@ -20,6 +23,8 @@ services:
       - ./Server:/app
     env_file:
       - .env
+    networks:
+      - backendnet
 
   client:
     build: ./Web-Client
@@ -28,3 +33,9 @@ services:
       - "7666:80"
     depends_on:
       - server
+    networks:
+      - backendnet
+
+networks:
+  backendnet:
+    driver: bridge
