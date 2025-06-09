@@ -1,6 +1,5 @@
 from flask import Flask
 from .routes.currency import currency_bp
-from .routes.weather import weather_bp
 from .db.mongo import init_db
 from dotenv import load_dotenv
 from flask_cors import CORS
@@ -19,6 +18,5 @@ def create_app():
     init_db(app)
 
     app.register_blueprint(currency_bp, url_prefix='/api/currency')
-    app.register_blueprint(weather_bp, url_prefix='/api/weather')
 
     return app
