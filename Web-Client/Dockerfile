@@ -4,7 +4,7 @@ FROM node:18 as build
 WORKDIR /app
 
 # package-lock.json should be added here when project leaves development stage and enters production stage
-COPY package.json ./    
+COPY package.json package-lock.json ./    
 RUN npm install
 
 COPY . .
