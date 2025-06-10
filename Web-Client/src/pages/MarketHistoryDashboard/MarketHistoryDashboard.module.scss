@@ -2,7 +2,16 @@
     width: 100%;
     flex-grow: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     background-color: $market-background-color;
+}
+
+.market_history_dashboard_container h1 {
+    margin: 1rem 0 2rem 0;
+}
+
+.market_currency_history_container {
+    margin-bottom: 10vh;
 }
