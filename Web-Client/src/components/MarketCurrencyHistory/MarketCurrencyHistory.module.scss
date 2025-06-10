@@ -1,0 +1,27 @@
+.market_currency_history_error_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.market_currency_history_error_container h2 {
+    color: $red;
+}
+
+.market_currency_history_error_container button {
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 0.3em;
+    background-color: $dark-blue;
+    color: $Text-White-Texts;
+    padding: 0.3em 0.5em;
+    box-shadow: 0 0.15em 0.1em 0.05em $gray;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.market_currency_history_error_container button:hover {
+    background-color: $dark-blue-hover;
+}

@@ -128,7 +128,6 @@ export default function MarketDashboard() {
 
                 {hasUserStartedLoadingCurrencyData && !loadingCurrencyData && loadingErrors.loadingCurrencyDataError === null && (
                     <div className={styles.currency_result_info_container}>
-                        {console.log(currencyData)}
                         {currencyDataType === "currency" && currencyData.rates.length === 1 && (
                             <div className={styles.currency_result_info_details_container}>
                                 <div className={styles.currency_result_info_mean_rate_container}>
@@ -176,8 +175,6 @@ export default function MarketDashboard() {
                                     yAxisDataKey={"rate"} 
                                     lineColor="#00B4D8"    
                                 />
-                                {console.log(currencyData)}
-                                {console.log(createCurrencyDataToSaveToDatabase(currencyData))}
                                 <SaveCurrencyDataButton data={createCurrencyDataToSaveToDatabase(currencyData)}/>
                             </div>
                         )}

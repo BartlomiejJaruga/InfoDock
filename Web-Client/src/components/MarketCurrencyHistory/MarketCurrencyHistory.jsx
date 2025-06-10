@@ -19,7 +19,6 @@ export default function MarketCurrencyHistory() {
 
         axiosInstance.get("/currency/currency-history/")
             .then(response => {
-                console.log(response.data);
                 setCurrencyHistoryData(response.data);
                 setCurrencyHistoryDataLoadingError(false);
                 setLoadingCurrencyHistoryData(false);
@@ -39,8 +38,9 @@ export default function MarketCurrencyHistory() {
             )}
 
             {!loadingCurrencyHistoryData && currencyHistoryDataLoadingError && (
-                <div>
-                    <h1>error!</h1>
+                <div className={styles.market_currency_history_error_container}>
+                    <h2>Failed to load saved market history, please try again later</h2>
+                    <button onClick={getCurrencyHistory}>Retry</button>
                 </div>
             )}
 

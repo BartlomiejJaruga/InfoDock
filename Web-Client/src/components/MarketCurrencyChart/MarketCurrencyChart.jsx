@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import styles from "./MarketCurrencyChart.module.scss";
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -7,12 +6,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 
 export default function MarketCurrencyChart({ data, xAxisDataKey, yAxisDataKey, lineColor }) {
-
-    useEffect(() => {
-        console.log("rendered Chart");
-        console.log(data);
-    })
-
     return (
         <div className={styles.market_currency_chart_container}>
             <ResponsiveContainer width="100%" height="100%">
