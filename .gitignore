@@ -1,3 +1,6 @@
 # Ignore all .env files recursively
 .env
 *.env
+
+**/__pycache__/
+*.pyc
