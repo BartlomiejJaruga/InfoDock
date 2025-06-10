@@ -9,7 +9,8 @@ export default function MarketCurrencyHistory() {
     const [currencyHistoryData, setCurrencyHistoryData] = useState([]);
     const [currencyHistoryDataLoadingError, setCurrencyHistoryDataLoadingError] = useState(false);
     const [loadingCurrencyHistoryData, setLoadingCurrencyHistoryData] = useState(true);
-    
+    const [currencyHistoryDataDeleteError, setCurrencyHistoryDataDeleteError] = useState(false);
+
     useEffect(() => {
         getCurrencyHistory();
     }, []); 
@@ -30,6 +31,18 @@ export default function MarketCurrencyHistory() {
             });
     }
 
+    const handleRemoveCurrencyHistory = () => {
+        axiosInstance.delete("/currency/currency-history/delete-all/")
+            .then(response => {
+                setCurrencyHistoryDataDeleteError(false);
+                setCurrencyHistoryData([]);
+            })
+            .catch(err => {
+                console.error(err);
+                setCurrencyHistoryDataDeleteError(true);
+            });
+    }
+
 
     return (
         <div className={styles.market_currency_history_container}>
@@ -44,8 +57,18 @@ export default function MarketCurrencyHistory() {
                 </div>
             )}
 
-            {!loadingCurrencyHistoryData && !currencyHistoryDataLoadingError && (
-                <MarketCurrencyHistoryList currencyHistoryData={currencyHistoryData}/>
+            {!loadingCurrencyHistoryData && !currencyHistoryDataLoadingError && currencyHistoryData.length > 0 && (
+                <>  
+                    <div className={styles.market_currency_history_remove_container}>
+                        <div>
+                            <button onClick={handleRemoveCurrencyHistory}>Delete History</button>
+                            {currencyHistoryDataDeleteError && (
+                                <p>Failed to delete currency history, please try again later</p>
+                            )}
+                        </div>
+                    </div>
+                    <MarketCurrencyHistoryList currencyHistoryData={currencyHistoryData}/>
+                </>
             )}
         </div>
     );

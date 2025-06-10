@@ -25,3 +25,30 @@
 .market_currency_history_error_container button:hover {
     background-color: $dark-blue-hover;
 }
+
+
+.market_currency_history_remove_container {
+    width: 100vw;
+    height: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 1rem 0;
+    padding: 0 3rem 0 0;
+}
+
+.market_currency_history_remove_container div button {
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 0.3em;
+    background-color: $red;
+    color: $Text-White-Texts;
+    padding: 0.3em 0.5em;
+    box-shadow: 0 0.15em 0.1em 0.05em $gray;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.market_currency_history_remove_container div button:hover {
+    background-color: $red-hover;
+}
